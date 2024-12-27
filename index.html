@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splitzy - Split Bills Easily</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Mono', monospace;
+            letter-spacing: -0.5px;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .title {
+            text-align: center;
+            color: #2563eb;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .credit {
+            text-align: center;
+            color: #4b5563;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .input-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .count-badge {
+            background: #2563eb;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .bill-container {
+            margin-bottom: 1rem;
+        }
+
+        .bill-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .bill-item input {
+            padding: 0.75rem;
+        }
+
+        .bill-item input[type="text"] {
+            flex: 2;
+        }
+
+        .bill-item input[type="number"] {
+            flex: 1;
+        }
+
+        .add-item-btn {
+            background-color: #047857;
+            margin-bottom: 0.5rem;
+        }
+
+        .remove-item-btn {
+            background: #dc2626;
+            width: 40px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .bill-total {
+            text-align: right;
+            font-weight: 700;
+            color: #2563eb;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            font-family: 'Space Mono', monospace;
+        }
+
+        input[type="date"] {
+            color: #4b5563;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            font-family: 'Space Mono', monospace;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .event-form {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .event-form.show {
+            display: block;
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: #ecfdf5;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-section {
+            padding: 1rem 0;
+        }
+
+        .result-section:not(:last-child) {
+            border-bottom: 2px solid #047857;
+            margin-bottom: 1rem;
+        }
+
+        .result-item {
+            margin-bottom: 0.5rem;
+            color: #065f46;
+            font-size: 1rem;
+        }
+
+        .result-item strong {
+            color: #064e3b;
+            font-weight: 700;
+        }
+
+        .split-amount-box {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            border: 2px solid #047857;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .people-list {
+            margin-top: 0.25rem;
+            line-height: 1.4;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .button-group button {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .copy-button {
+            background-color: #059669;
+        }
+
+        .save-button {
+            background-color: #7c3aed;
+        }
+
+        .copy-button:hover {
+            background-color: #047857;
+        }
+
+        .save-button:hover {
+            background-color: #6d28d9;
+        }
+
+        @media (max-width: 480px) {
+            .calculator {
+                padding: 1.5rem;
+            }
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .payment-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .payment-checkbox input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .upi-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f3f4f6;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .coordinator-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .upi-input {
+            display: none;
+        }
+
+        .section-divider {
+            border-top: 2px solid #047857;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1 class="title">Splitzy</h1>
+        <div class="credit">Coded by Alvin. All Rights Reserved</div>
+        <button onclick="toggleEventForm()">New Event</button>
+        
+        <div class="event-form" id="eventForm">
+            <div class="input-group">
+                <label for="event-name">Event Name</label>
+                <input type="text" id="event-name" placeholder="Enter event name">
+            </div>
+            <div class="input-group">
+                <label for="event-date">Event Date</label>
+                <input type="date" id="event-date">
+            </div>
+            <div class="section-divider"></div>
+            <div class="input-group">
+                <label for="coordinator">Coordinator</label>
+                <input type="text" id="coordinator" placeholder="Enter coordinator's name">
+            </div>
+            <div class="input-group">
+                <label>Payment Types</label>
+                <div class="payment-options">
+                    <label class="payment-checkbox">
+                        <input type="checkbox" name="payment" value="GPay"> GPay
+                    </label>
+                    <label class="payment-checkbox">
+                        <input type="checkbox" name="payment" value="PhonePe"> PhonePe
+                    </label>
+                    <label class="payment-checkbox">
+                        <input type="checkbox" name="payment" value="Paytm"> Paytm
+                    </label>
+                    <label class="payment-checkbox">
+                        <input type="checkbox" name="payment" value="Other" onchange="toggleUPIFields()"> Other
+                    </label>
+                </div>
+            </div>
+            <div class="input-group upi-input">
+                <label for="upi-id">UPI ID</label>
+                <input type="text" id="upi-id" placeholder="Enter UPI ID">
+            </div>
+            <div class="section-divider"></div>
+            <div class="input-group">
+                <div class="input-group-header">
+                    <label for="people-names">People</label>
+                    <span class="count-badge" id="peopleCount">0 people</span>
+                </div>
+                <textarea 
+                    id="people-names" 
+                    placeholder="Type each person's name with a comma"
+                    oninput="updatePeopleCount()"
+                ></textarea>
+            </div>
+            <div class="input-group">
+                <label>Bill Items</label>
+                <div class="bill-container" id="billContainer">
+                    <div class="bill-item">
+                        <input type="text" placeholder="Item name" class="bill-name">
+                        <input type="number" placeholder="Price" class="bill-price" min="0" step="0.01" oninput="calculateTotal()">
+                        <button class="remove-item-btn" onclick="removeItem(this)">×</button>
+                    </div>
+                </div>
+                <button class="add-item-btn" onclick="addBillItem()">+ Add Item</button>
+                <div class="bill-total">Total: ₹<span id="billTotal">0.00</span></div>
+            </div>
+            
+            <button onclick="calculateSplit()">Split</button>
+        </div>
+
+        <div class="result" id="result">
+            <div class="result-section">
+                <div class="result-item">
+                    <strong>Event:</strong> <span id="result-event-name"></span>
+                </div>
+                <div class="result-item">
+                    <strong>Date:</strong> <span id="result-event-date"></span>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-item">
+                    <strong>Group:</strong> 
+                    <div class="people-list" id="result-people-list"></div>
+                </div>
+                <div class="result-item">
+                    <strong>Number of People:</strong> <span id="result-number-of-people"></span>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-item">
+                    <strong>Bill Breakdown:</strong>
+                    <div class="people-list" id="result-bill-items"></div>
+                </div>
+                <div class="result-item">
+                    <strong>Total Amount:</strong> ₹<span id="result-total-amount"></span>
+                </div>
+                <div class="split-amount-box">
+                    Each Person Pays: ₹<span id="result-split-amount"></span>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-item">
+                    <strong>Coordinator:</strong> <span id="result-coordinator"></span>
+                </div>
+                <div class="result-item" id="result-payment-methods"></div>
+                <div class="upi-details">
+                    <div><strong>UPI ID:</strong> <span id="result-upi-id"></span></div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button onclick="copyToClipboard()" class="copy-button">Copy</button>
+                <button onclick="saveAsImage()" class="save-button">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add html2canvas library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        function toggleUPIFields() {
+            const otherCheckbox = document.querySelector('input[value="Other"]');
+            const upiInputs = document.querySelectorAll('.upi-input');
+            
+            upiInputs.forEach(input => {
+                input.style.display = otherCheckbox.checked ? 'block' : 'none';
+            });
+        }
+
+        function formatIndianCurrency(number) {
+            const parts = number.toString().split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return parts.join('.');
+        }
+
+        function toggleEventForm() {
+            const form = document.getElementById('eventForm');
+            form.classList.add('show');
+        }
+
+        function updatePeopleCount() {
+            const peopleNames = document.getElementById('people-names').value;
+            const count = peopleNames
+                .split(',')
+                .map(name => name.trim())
+                .filter(name => name.length > 0)
+                .length;
+            
+            document.getElementById('peopleCount').textContent = `${count} people`;
+            return count;
+        }
+
+        function formatPeopleList(peopleString) {
+            return peopleString
+                .split(',')
+                .map(name => name.trim())
+                .filter(name => name.length > 0)
+                .join(', ');
+        }
+
+        function addBillItem() {
+            const container = document.getElementById('billContainer');
+            const newItem = document.createElement('div');
+            newItem.className = 'bill-item';
+            newItem.innerHTML = `
+                <input type="text" placeholder="Item name" class="bill-name">
+                <input type="number" placeholder="Price" class="bill-price" min="0" step="0.01" oninput="calculateTotal()">
+                <button class="remove-item-btn" onclick="removeItem(this)">×</button>
+            `;
+            container.appendChild(newItem);
+        }
+
+        function removeItem(button) {
+            button.parentElement.remove();
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const prices = document.querySelectorAll('.bill-price');
+            let total = 0;
+            prices.forEach(price => {
+                total += parseFloat(price.value || 0);
+            });
+            document.getElementById('billTotal').textContent = formatIndianCurrency(total.toFixed(2));
+            return total;
+        }
+
+        function getBillItems() {
+            const items = document.querySelectorAll('.bill-item');
+            const billItems = [];
+            items.forEach(item => {
+                const name = item.querySelector('.bill-name').value;
+                const price = item.querySelector('.bill-price').value;
+                if (name && price) {
+                    billItems.push({name, price});
+                }
+            });
+            return billItems;
+        }
+
+        function formatBillItems(items) {
+            return items.map(item => 
+                `${item.name}: ₹${formatIndianCurrency(parseFloat(item.price).toFixed(2))}`
+            ).join('\n');
+        }
+
+        function calculateSplit() {
+            const eventName = document.getElementById('event-name').value;
+            const eventDate = document.getElementById('event-date').value;
+            const coordinator = document.getElementById('coordinator').value;
+            const upiId = document.getElementById('upi-id').value;
+            const peopleNames = document.getElementById('people-names').value;
+            const numberOfPeople = updatePeopleCount();
+            const totalAmount = calculateTotal();
+            const billItems = getBillItems();
+
+            // Get selected payment methods
+            const paymentMethods = Array.from(document.querySelectorAll('input[name="payment"]:checked'))
+                .map(input => input.value);
+
+            if (!eventName || !eventDate || !coordinator || !peopleNames || totalAmount <= 0 || numberOfPeople <= 0) {
+                alert('Please fill in all required fields with valid values');
+                return;
+            }
+
+            document.getElementById('result-event-name').textContent = eventName;
+            document.getElementById('result-event-date').textContent = formatDate(eventDate);
+            document.getElementById('result-people-list').textContent = formatPeopleList(peopleNames);
+            document.getElementById('result-number-of-people').textContent = numberOfPeople;
+            document.getElementById('result-bill-items').innerHTML = formatBillItems(billItems).replace(/\n/g, '<br>');
+            document.getElementById('result-total-amount').textContent = formatIndianCurrency(totalAmount.toFixed(2));
+            document.getElementById('result-split-amount').textContent = formatIndianCurrency((totalAmount / numberOfPeople).toFixed(2));
+
+            document.getElementById('result-coordinator').textContent = coordinator;
+            const hasOther = paymentMethods.includes('Other');
+            document.getElementById('result-payment-methods').innerHTML = paymentMethods.length > 0 
+                ? `<strong>Payments Accepted In:</strong> ${paymentMethods.join(', ')}` 
+                : '<strong>Pay Via:</strong>';
+            document.querySelector('.upi-details').style.display = hasOther ? 'block' : 'none';
+            document.getElementById('result-upi-id').textContent = upiId;
+
+            document.getElementById('result').classList.add('show');
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function copyToClipboard() {
+            const eventName = document.getElementById('result-event-name').textContent;
+            const eventDate = document.getElementById('result-event-date').textContent;
+            const coordinator = document.getElementById('result-coordinator').textContent;
+            const peopleList = document.getElementById('result-people-list').textContent;
+            const totalAmount = document.getElementById('result-total-amount').textContent;
+            const numberOfPeople = document.getElementById('result-number-of-people').textContent;
+            const splitAmount = document.getElementById('result-split-amount').textContent;
+            const billItems = getBillItems();
+            const paymentMethods = Array.from(document.querySelectorAll('input[name="payment"]:checked'))
+                .map(input => input.value);
+            const upiId = document.getElementById('result-upi-id').textContent;
+
+            const text = `Event: ${eventName}\n` +
+                        `Date: ${eventDate}\n` +
+                        `=======\n` +
+                        `Group: ${peopleList}\n` +
+                        `Number of People: ${numberOfPeople}\n` +
+                        `=======\n` +
+                        `Bill Breakdown:\n${formatBillItems(billItems)}\n` +
+                        `Total Amount: ₹${totalAmount}\n` +
+                        `=======\n` +
+                        `Each Person Pays: ₹${splitAmount}\n` +
+                        `=======\n` +
+                        `Coordinator: ${coordinator}\n` +
+                        `${paymentMethods.length > 0 ? 'Payments Accepted In: ' + paymentMethods.join(', ') : 'Pay Via:'}\n` +
+                        `UPI ID: ${upiId}\n`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const copyButton = document.querySelector('.copy-button');
+                copyButton.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyButton.textContent = 'Copy';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy text');
+            });
+        }
+
+        function saveAsImage() {
+            const resultDiv = document.getElementById('result');
+            
+            // Create a clone of the result div to modify for image capture
+            const clone = resultDiv.cloneNode(true);
+            // Remove the button group from the clone
+            clone.querySelector('.button-group').remove();
+            
+            // Position the clone absolutely and make it visible for html2canvas
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px';
+            document.body.appendChild(clone);
+
+            // Use html2canvas to capture the clone
+            html2canvas(clone).then(canvas => {
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'splitzy-bill.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                // Clean up
+                document.body.removeChild(clone);
+            });
+        }
+    </script>
+</body>
+</html>
