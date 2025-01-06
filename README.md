@@ -1,42 +1,25 @@
-# Splitzy  
+# Splitzy 💸👯‍♂️
 
-## Overview  
-Splitzy is a web-based application designed to help groups or parties manage and split expenses easily. 
-Whether it's for a trip, dinner, or event, this tool simplifies the process of dividing costs fairly among participants. 
-With a clean interface and intuitive functionality, Splitzy ensures that everyone knows exactly what they owe or are owed.  
+Welcome to **Splitzy**!  
+This website makes it easy to split the bill amount among a group of people for any event, gathering, or outing. 
+No more calculations, just enter the total and let Splitzy do the rest!
 
----
+## Features:
+- **Bill Splitting**: Enter the total amount and the number of people, and Splitzy will calculate each person’s share.
+- **Customizable**: Adjust the number of people or the amount to suit your needs.
+- **Easy-to-use**: Simple interface with clear instructions for quick calculations.
+- **Fair Distribution**: Automatically splits the total evenly, with an option for custom amounts if needed.
 
-## Features  
-- Add and manage multiple expenses.  
-- Automatically calculates each person’s share of the total cost.  
-- Simple, user-friendly interface.  
-- Option to adjust individual contributions.  
-- Responsive design for use on both desktop and mobile devices.  
+## How to Use:
+1. Enter the total bill amount.
+2. Specify the number of people in your group.
+3. Click "Split" to see how much each person owes.
+4. Share the result with your group or adjust the amount as necessary!
 
----
-
-## Technologies Used  
-- **HTML**: For the basic structure of the application.  
-- **CSS**: For styling and ensuring a responsive layout.  
-- **JavaScript**: To handle calculations and interactivity.  
-
----
-
-## How to Use  
-1. Clone or download the project repository.  
-2. Open the `index.html` file in your web browser.  
-3. Add your group’s expenses and enter the participants.  
-4. View and adjust the calculated share for each person.  
+## Technologies Used:
+- **Frontend**: HTML, CSS, JavaScript
+- **Libraries**: jQuery for DOM manipulation and smooth interactions
 
 ---
 
-## Future Enhancements  
-- User login and account management.  
-- Support for multiple currencies.  
-- Option to export reports as PDF or CSV.  
-
----
-
-## License  
-This project is open-source and distributed under the [MIT License](LICENSE).  
+**Author:** Alvin Sonny
